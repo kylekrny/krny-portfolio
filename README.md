@@ -1,50 +1,41 @@
-# React + TypeScript + Vite
+# KRNY Boilerplate
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+For the variety of apps I have built, I enjoy utilizing a specific tech stack. While I acknowledge this can be limiting. It allows me to develop mastery over my skill and with the added benefit of iterating quickly.
 
-Currently, two official plugins are available:
+This boilerplate aims to help speed up the development process, saving the un-necessary boilerplate and reducing duplicate work. The main branch is targeted as having "everything and the kitchen sink". The sub-branches have specific break points in case an app might not need all features.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Main Branch currently include
 
-## Expanding the ESLint configuration
+- React
+- TailwindCSS
+  - Hero Icons
+  - Headless UI
+  - Inter Font Family
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Planned addons
 
-- Configure the top-level `parserOptions` property like this:
+- ESLint / Prettier
+- React Testing Library / Jest
+- Cypress
+- React Router
+- React Context
+- Github actions (for deploying to GH pages)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Tailwind Components
+- Firebase Auth
+  - Login
+  - Logout
+  - Forgot Password
+  - Verification
+- Cloud Firestore
+  - Read
+  - Write
+  - Update
+  - Delete
+- Cloud Functions
+- Firebase Analytics
+- Stripe Integration
+- Notifications
+- React Redux
