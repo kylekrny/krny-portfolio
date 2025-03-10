@@ -1,8 +1,12 @@
 ---
+interface Props {
+  id: string;
+}
 
+const { id } = Astro.props;
 ---
 
-<div id='modal' class="relative z-10 display-none" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div id={id} class="relative z-10 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
 
   <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -12,7 +16,7 @@
           <h2 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
             Modal title
           </h2>
-          <button id="closeModal" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-hidden">
+          <button id="closeModal" data-modal={id} type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-hidden">
             <span class="sr-only">Close</span>
             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -25,31 +29,33 @@
     </div>
   </div>
 </div>
-    <script>
-        import { isOpen } from '../../store.js'
-    
-        isOpen.subscribe(open => {
-        const modal = document.getElementById('modal');
-        if (modal) {
-            if (open) {
-                modal.style.display = 'block';
-            } else {
-                modal.style.display = 'none';
-            }
-        }
-    })
+<script>
+  import { openModal } from '../../store.js'
+  
+  openModal.subscribe(open => {
+    const modal = document.getElementById(open);
+    if (modal && open) {
+      modal.style.display = 'block';
+    } else if (modal) {
+      modal.style.display = 'none';
+    }
+  })
+  
+  function closeModal(e: MouseEvent) {
+    const modalId = e.currentTarget ? String((e.currentTarget as HTMLElement).dataset.modal) : '';
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.style.display = 'none';
+    }
+    openModal.set('');
 
-
-    function openDialog() {
-    isOpen.set(false);
   }
-
-  // Add an event listener to the button
+  
   const closeModalButton = document.getElementById('closeModal');
   if (closeModalButton) {
-    closeModalButton.addEventListener('click', openDialog);
+    closeModalButton.addEventListener('click', closeModal);
   }
-    </script>
+</script>
 
 
 

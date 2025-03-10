@@ -68,23 +68,24 @@ import Experience from './BentoBox/Experience.astro'
             Case Studies
           </div>
           <div class="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-            <!-- content goes here -->
+            <button id='openModal' class="w-fit rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800">View Case Studies</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-<script>
-  import { isOpen } from '../store.js';
+
+  <script>
+      import { openModal } from '../store.js';
 
   // Set the store to true when the button is clicked
   function openDialog() {
-    isOpen.set(true);
+    openModal.set('newModal');
   }
 
   // Add an event listener to the button
-  const openDialogButton = document.getElementById('openDialog');
+  const openDialogButton = document.getElementById('openModal');
   if (openDialogButton) {
     openDialogButton.addEventListener('click', openDialog);
   }
-</script>
+  </script>
