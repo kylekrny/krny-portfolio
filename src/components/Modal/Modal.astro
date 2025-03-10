@@ -1,0 +1,40 @@
+---
+
+---
+
+<div id='modal' class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+
+  <div 
+    class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative transition-transform duration-300 transform"
+  >
+    <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+      ✖
+    </button>
+    <slot />
+  </div>
+</div>
+    <script>
+        import { isOpen } from '../../store.js'
+    
+        isOpen.subscribe(open => {
+        const modal = document.getElementById('modal');
+        if (modal) {
+            if (open) {
+                modal.style.display = 'block';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+    })
+
+
+    function openDialog() {
+    isOpen.set(false);
+  }
+
+  // Add an event listener to the button
+  const closeModalButton = document.getElementById('closeModal');
+  if (closeModalButton) {
+    closeModalButton.addEventListener('click', openDialog);
+  }
+    </script>

@@ -8,7 +8,7 @@
             Experience
           </div>
           <div class="relative w-full grow max-lg:mx-auto ">
-            <!-- content goes here -->
+            <button id="openDialog">Open</button>
           </div>
         </div>
       </div>
@@ -80,3 +80,17 @@
       </div>
     </div>
   </div>
+<script>
+  import { isOpen } from '../store.js';
+
+  // Set the store to true when the button is clicked
+  function openDialog() {
+    isOpen.set(true);
+  }
+
+  // Add an event listener to the button
+  const openDialogButton = document.getElementById('openDialog');
+  if (openDialogButton) {
+    openDialogButton.addEventListener('click', openDialog);
+  }
+</script>
