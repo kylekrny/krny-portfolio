@@ -1,0 +1,18 @@
+---
+const { title } = Astro.props;
+---
+
+
+<div class="relative lg:row-start-1 lg:col-start-1 lg:row-span-2">
+    <div class="absolute inset-px rounded-xl bg-neutral-50 outline-4 outline-white shadow-lg"></div>
+        <div class="relative flex h-full flex-col">
+            <div class="relative px-8 pt-8 pb-3 sm:px-10 sm:pt-10 sm:pb-0">
+            <h6 class="absolute top-2 left-2 inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium shadow-md text-gray-900  ring-inset bg-white">
+            <!-- <svg class="size-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
+                <circle cx="3" cy="3" r="3" />
+            </svg> -->
+            {title}
+            </h6>           
+            </div>
+    </div>
+</div>
