@@ -1,82 +1,129 @@
 ---
 interface Props {
   id: string;
+  title: string;
 }
 
-const { id } = Astro.props;
+const { id, title } = Astro.props;
 ---
 
 <div id={id} class="relative z-10 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
+  <!-- Modal Backdrop -->
+  <div class="fixed inset-0 bg-gray-500/75 opacity-0 transition-opacity duration-300 ease-out" aria-hidden="true"></div>
 
   <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
     <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-      <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+      <!-- Modal Panel -->
+      <div 
+        class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      >
         <div class="flex justify-between">
           <h2 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-            Modal title
+            {title}
           </h2>
-          <button id="closeModal" data-modal={id} type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-hidden">
-            <span class="sr-only">Close</span>
-            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          </button>
+            <button 
+              type="button" 
+              data-close-id={id} 
+              class="close-modal rounded-md bg-white text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-hidden"
+            >
+              <span class="sr-only">Close</span>
+              <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
         </div>
         <div>
+          <slot />
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
-  import { openModal } from '../../store.js'
-  
-  openModal.subscribe(open => {
-    const modal = document.getElementById(open);
-    if (modal && open) {
-      modal.style.display = 'block';
-    } else if (modal) {
-      modal.style.display = 'none';
-    }
-  })
-  
-  function closeModal(e: MouseEvent) {
-    const modalId = e.currentTarget ? String((e.currentTarget as HTMLElement).dataset.modal) : '';
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.style.display = 'none';
-    }
-    openModal.set('');
+  document.addEventListener("DOMContentLoaded", () => {
+    function openModal(modal: HTMLElement) {
+      if (!modal) return;
+      modal.classList.remove("hidden");
 
-  }
-  
-  const closeModalButton = document.getElementById('closeModal');
-  if (closeModalButton) {
-    closeModalButton.addEventListener('click', closeModal);
-  }
+      // Animate in
+      const fixedElement = modal.querySelector(".fixed");
+      if (fixedElement) {
+        fixedElement.classList.remove("opacity-0");
+        fixedElement.classList.add("opacity-100");
+      }
+      const relativeElement = modal.querySelector(".relative");
+      if (relativeElement) {
+        relativeElement.classList.remove("opacity-0", "translate-y-4", "sm:translate-y-0", "sm:scale-95");
+        relativeElement.classList.add("opacity-100", "translate-y-0", "sm:scale-100");
+      }
+
+      // Add event listeners for closing
+      document.addEventListener("keydown", escClose);
+      modal.addEventListener("click", outsideClickClose);
+    }
+
+    function closeModal(modal: HTMLElement) {
+      if (!modal) return;
+
+      // Animate out
+      const fixedElement = modal.querySelector(".fixed");
+      if (fixedElement) {
+        fixedElement.classList.remove("opacity-100");
+        fixedElement.classList.add("opacity-0");
+      }
+      const relativeElement = modal.querySelector(".relative");
+      if (relativeElement) {
+        relativeElement.classList.remove("opacity-100", "translate-y-0", "sm:scale-100");
+        relativeElement.classList.add("opacity-0", "translate-y-4", "sm:translate-y-0", "sm:scale-95");
+      }
+
+      // Wait for animation to finish before hiding
+      setTimeout(() => {
+        modal.classList.add("hidden");
+      }, 200); // Match animation duration
+
+      // Remove event listeners
+      document.removeEventListener("keydown", escClose);
+      modal.removeEventListener("click", outsideClickClose);
+    }
+
+    function escClose(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        document.querySelectorAll(".relative.z-10:not(.hidden)").forEach((modal) => closeModal(modal as HTMLElement));
+      }
+    }
+
+    function outsideClickClose(event: MouseEvent) {
+      const modal = event.currentTarget;
+      const target = event.target as HTMLElement;
+      if (target && (target === modal || target.classList.contains("fixed"))) {
+        if (modal instanceof HTMLElement) {
+          closeModal(modal);
+        }
+      }
+    }
+
+    // Open Modal
+    document.querySelectorAll(".open-modal").forEach(button => {
+      button.addEventListener("click", () => {
+        const modalId = button.getAttribute("data-modal-id");
+        if (!modalId) return;
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        openModal(modal);
+      });
+    });
+
+    // Close Modal
+    document.querySelectorAll(".close-modal").forEach(button => {
+      button.addEventListener("click", () => {
+        const modalId = button.getAttribute("data-close-id");
+        if (!modalId) return;
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        closeModal(modal);
+      });
+    });
+  });
 </script>
-
-
-
-      <!--
-        Modal panel, show/hide based on modal state.
-
-        Entering: "ease-out duration-300"
-          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          To: "opacity-100 translate-y-0 sm:scale-100"
-        Leaving: "ease-in duration-200"
-          From: "opacity-100 translate-y-0 sm:scale-100"
-          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-      -->
-
-        <!--
-    Background backdrop, show/hide based on modal state.
-
-    Entering: "ease-out duration-300"
-      From: "opacity-0"
-      To: "opacity-100"
-    Leaving: "ease-in duration-200"
-      From: "opacity-100"
-      To: "opacity-0"
-  -->

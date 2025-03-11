@@ -1,14 +1,15 @@
 ---
-const { title, position } = Astro.props;
+const { title, position, modalId } = Astro.props;
 
 const cardClass = `relative ${position ? position : ""}`;
+
 ---
 
 
 <div class={cardClass}>
     <div class="absolute inset-px rounded-xl bg-neutral-50 outline-4 outline-white shadow-lg"></div>
-        <div class="relative h-full">
-            <h6 class="absolute z-5 top-2 left-2 inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium shadow-md text-gray-900  ring-inset bg-white">
+        <div data-modal-id={modalId} class="open-modal relative h-full">
+            <h6 class="absolute z-5 top-2 left-2 inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium shadow-md text-gray-900  ring-inset bg-white transition-shadow hover:shadow-lg">
             <!-- <svg class="size-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
                 <circle cx="3" cy="3" r="3" />
             </svg> -->
@@ -17,3 +18,6 @@ const cardClass = `relative ${position ? position : ""}`;
             <slot/>
     </div>
 </div>
+<script>
+
+</script>

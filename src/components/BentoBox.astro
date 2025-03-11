@@ -20,18 +20,3 @@ import Testimonials from './BentoBox/Testimonials.astro'
       <Projects />
     </div>
   </div>
-
-  <script>
-      import { openModal } from '../store.js';
-
-  // Set the store to true when the button is clicked
-  function openDialog() {
-    openModal.set('newModal');
-  }
-
-  // Add an event listener to the button
-  const openDialogButton = document.getElementById('openModal');
-  if (openDialogButton) {
-    openDialogButton.addEventListener('click', openDialog);
-  }
-  </script>
