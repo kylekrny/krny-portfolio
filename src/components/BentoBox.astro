@@ -1,68 +1,23 @@
 ---
 import AboutMe from './BentoBox/AboutMe.astro'
+import Blog from './BentoBox/Blog.astro'
 import Experience from './BentoBox/Experience.astro'
+import HireMe from './BentoBox/HireMe.astro'
+import Projects from './BentoBox/Projects.astro'
+import Skills from './BentoBox/Skills.astro'
+import Testimonials from './BentoBox/Testimonials.astro'
 ---
 
 
   <div class="mx-auto">
-    <div class="mt-10 grid gap-4 sm:mt-16 lg:grid-cols-3 lg:grid-rows-3">
+    <div class="mt-10 grid gap-4 sm:mt-16 grid-cols-2 grid-rows-5 md:grid-cols-3 md:grid-rows-3">
       <Experience />
-      <div class="relative lg:row-start-3 lg:col-start-1">
-        <div class="absolute inset-px rounded-xl bg-neutral-50 outline-4 outline-white shadow-lg"></div>
-        <div class="relative flex h-full flex-col">
-          <div class="px-8 pt-8 pb-3 sm:px-10 sm:pt-10 sm:pb-0">
-            Hire Me
-          </div>
-          <div class="relative w-full grow max-lg:mx-auto ">
-            <!-- content goes here -->
-          </div>
-        </div>
-      </div>
+      <HireMe />
       <AboutMe />
-      <div class="relative">
-        <div class="absolute inset-px bg-neutral-50 rounded-xl outline-4 outline-white shadow-lg"></div>
-        <div class="relative flex h-full flex-col overflow-hidden">
-          <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-            Blog
-          </div>
-          <div class="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-            <!-- content goes here -->
-          </div>
-        </div>
-      </div>
-      <div class="relative">
-        <div class="absolute inset-px bg-neutral-50 rounded-xl outline-4 outline-white shadow-lg"></div>
-        <div class="relative flex h-full flex-col overflow-hidden">
-          <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-            Testimonials
-          </div>
-          <div class="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-            <!-- content goes here -->
-          </div>
-        </div>
-      </div>
-      <div class="relative">
-        <div class="absolute inset-px bg-neutral-50 rounded-xl outline-4 outline-white shadow-lg"></div>
-        <div class="relative flex h-full flex-col overflow-hidden">
-          <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-            Skills
-          </div>
-          <div class="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-            <!-- content goes here -->
-          </div>
-        </div>
-      </div>
-      <div class="relative lg:row-start-3 lg:col-start-2 lg:col-span-2">
-        <div class="absolute inset-px bg-neutral-50 rounded-xl outline-4 outline-white shadow-lg"></div>
-        <div class="relative flex h-full flex-col overflow-hidden">
-          <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-            Case Studies
-          </div>
-          <div class="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-            <button id='openModal' class="w-fit rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800">View Case Studies</button>
-          </div>
-        </div>
-      </div>
+      <Blog/>
+      <Testimonials />
+      <Skills />
+      <Projects />
     </div>
   </div>
 
