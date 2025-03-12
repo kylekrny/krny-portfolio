@@ -5,23 +5,23 @@ import Modal from './Modal.astro'
 <Modal title="Project Request" id="project-modal">
         <form id="project-form" method="POST" class="pb-4">
 
-      <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+      <div class="mt-4 sm:mt-8 grid grid-cols-1 gap-x-6 gap-y-2.5 sm:gap-y-6 sm:grid-cols-6">
         <div class="sm:col-span-3">
           <label for="name" class="block text-sm/6 font-semibold text-gray-900">Name</label>
-          <div class="mt-2">
+          <div class="mt-1 sm:mt-2">
             <input type="text" name="name" id="name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700 sm:text-sm/6">
           </div>
         </div>
 
         <div class="sm:col-span-3">
           <label for="email" class="block text-sm/6 font-semibold text-gray-900">Email address</label>
-          <div class="mt-2">
+          <div class="mt-1 sm:mt-2">
             <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700 sm:text-sm/6">
           </div>
         </div>
         <div class="sm:col-span-3">
           <label for="company" class="block text-sm/6 font-semibold text-gray-900">Company Name (optional)</label>
-          <div class="mt-2">
+          <div class="mt-1 sm:mt-2">
             <input type="text" name="company" id="company" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700 sm:text-sm/6">
           </div>
         </div>
@@ -29,7 +29,7 @@ import Modal from './Modal.astro'
 
         <div class="sm:col-span-3">
           <label for="type" class="block text-sm/6 font-semibold text-gray-900">Project Type</label>
-          <div class="mt-2 grid grid-cols-1">
+          <div class="mt-1 sm:mt-2 grid grid-cols-1">
             <select id="type" name="type" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700 sm:text-sm/6">
               <option>MVP Development</option>
               <option>Team Augmentation</option>

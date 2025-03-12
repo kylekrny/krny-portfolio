@@ -7,7 +7,7 @@ interface Props {
 const { id, title } = Astro.props;
 ---
 
-<div id={id} class="relative z-10 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div id={id} class="relative z-10 hidden overflow-hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <!-- Modal Backdrop -->
   <div id="backdrop" class="fixed inset-0 bg-neutral-300/60 opacity-0 transition-opacity duration-500 ease-out" aria-hidden="true"></div>
 
@@ -15,7 +15,7 @@ const { id, title } = Astro.props;
     <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
       <!-- Modal Panel -->
       <div 
-        class="relative transform overflow-hidden rounded-lg bg-neutral-50 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 ease-out duration-300"
+        class=" w-[90%] relative transform overflow-hidden rounded-lg bg-neutral-50 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 ease-out duration-300"
       >
         <div class="flex justify-between mb-3">
           <h2 class="text-xl font-bold leading-6 text-gray-900" id="modal-title">
