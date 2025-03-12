@@ -1,9 +1,11 @@
+
+
 <div class="relative isolate mt-14 pb-8">
   <div class="mx-auto max-w-xl lg:max-w-4xl">
     <h2 class="text-lg font-semibold tracking-tight text-pretty text-gray-900 sm:text-2xl">Let’s talk about your project</h2>
-    <p class="mt-2 text-base text-gray-600 md:w-3/4">Let’s build something great together—whether you need an MVP, frontend support, or a code audit, I’m here to help.</p>
+    <p class="mt-2 text-base/8 md:w-3/4">Let’s build something great together—whether you need an MVP, frontend support, or a code audit, I’m here to help.</p>
     <div class="mt-6 flex flex-col gap-16 sm:gap-y-20 lg:flex-row">
-      <form action="#" method="POST" class="lg:flex-auto">
+      <form id="contact-form"  method="POST" class="lg:flex-auto">
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label for="name" class="block text-sm/6 font-semibold text-gray-900">Name</label>
@@ -44,3 +46,26 @@
     </div>
   </div>
 </div>
+<script>
+  import { actions } from 'astro:actions'
+  
+  const handleFormSubmit = async (event: Event) => {
+    event.preventDefault()
+    const form = event.target as HTMLFormElement
+    if (!form) return;
+    const formData = new FormData(form)
+    const formObject: { message: string; email: string; name: string } = Object.fromEntries(formData.entries()) as { message: string; email: string; name: string }
+    const response = await actions.contact(formObject)
+    if (!response.error) {
+      form.reset()
+      alert('Thanks for reaching out! I’ll get back to you soon.')
+    } else {
+      alert('There was an error submitting the form. Please try again.')
+    }
+  }
+  const form = document.getElementById('contact-form')
+  if (form) {
+    form.addEventListener('submit', handleFormSubmit)
+  }
+
+</script>
