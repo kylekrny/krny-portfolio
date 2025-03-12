@@ -41,6 +41,7 @@ const { id, title } = Astro.props;
 </div>
 
 <script>
+  import { actions } from 'astro:actions'
   document.addEventListener("DOMContentLoaded", () => {
     function openModal(modal: HTMLElement) {
       if (!modal) return;
@@ -130,4 +131,36 @@ const { id, title } = Astro.props;
       });
     });
   });
+
+      
+    
+      type FormObject = {
+        name: string;
+        email: string;
+        company: string;
+        type: string;
+        budget: string;
+        timeline: string;
+        description: string;
+      }
+    
+      const handleFormSubmit = async (event: Event) => {
+        event.preventDefault()
+        const form = event.target as HTMLFormElement
+        if (!form) return;
+        const formData = new FormData(form)
+        const formObject: FormObject = Object.fromEntries(formData.entries()) as FormObject
+        console.log(formObject)
+        const response = await actions.project(formObject)
+        console.log(response)
+        if (!response.error) {
+          form.reset()
+          alert('Thanks for reaching out! I’ll get back to you soon.')
+        } else {
+          alert('There was an error submitting the form. Please try again.')
+        }
+      }
+      const form = document.getElementById('project-form')
+      form?.addEventListener('submit', handleFormSubmit)
+
 </script>

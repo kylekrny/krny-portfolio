@@ -1,7 +1,7 @@
 import { ActionError, defineAction } from 'astro:actions';
 import { Resend } from 'resend';
 import { z } from 'astro:schema';
-import { generateContactEmailHTML } from './utils';
+import { generateContactEmailHTML, generateProjectEmailHTML } from './utils';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -41,7 +41,7 @@ const handleContactForm = async (formData: FormData) => {
   }
 };
 
-type ProjectFormData = {
+export type ProjectFormData = {
   name: string;
   email: string;
   company: string;
@@ -51,36 +51,41 @@ type ProjectFormData = {
   description: string;
 };
 
-// const handleProjectForm = async (formData: ProjectFormData) => {
-//   try {
-//     const { name, email, company, budget, timeline, type, description } =
-//       formData;
+const handleProjectForm = async (formData: ProjectFormData) => {
+  try {
+    const { name, email, company, budget, timeline, type, description } =
+      formData;
 
-//     await resend.emails.send({
-//       from: 'kylekrny.com <no-reply@kylekrny.com>',
-//       replyTo: email,
-//       to: 'kyle@kylekrny.com',
-//       subject: 'New Contact Form Submission',
-//       html: `<h3>New Message from ${name}</h3><p>${message}</p><p>Email: ${email}</p>`,
-//     });
+    await resend.emails.send({
+      from: 'kylekrny.com <no-reply@kylekrny.com>',
+      replyTo: email,
+      to: 'kyle@kylekrny.com',
+      subject: 'New Contact Form Submission',
+      text: `
+                New Project Inquiry from ${name} \n
+                Email: ${email} \n
+                Company: ${company} \n
+                Budget: ${budget} \n
+                Timeline: ${timeline} \n
+                Type: ${type} \n
+                Description: ${description}
+            `,
+    });
 
-//     await resend.emails.send({
-//       from: 'kylekrny.com <no-reply@kylekrny.com>',
-//       to: email as string,
-//       subject: 'Thanks for Contacting Us!',
-//       html: `
-//                 <h2>Hi ${name},</h2>
-//                 <p>Thanks for reaching out! I'll get back to you soon.</p>
-//                 <p><strong>Your Message:</strong></p>
-//                 <blockquote>${message}</blockquote>
-//                 <p>Best, <br/>Kyle Kearney</p>
-//             `,
-//     });
-//   } catch (error) {
-//     console.error('Error sending email:', error);
-//     return { error: 'Internal server error.', status: 500 };
-//   }
-// };
+    const emailHtml = generateProjectEmailHTML(formData);
+
+    await resend.emails.send({
+      from: 'kylekrny.com <no-reply@kylekrny.com>',
+      to: email as string,
+      subject: 'Thank you for your Project Inquiry!',
+      html: emailHtml,
+      text: 'Thanks for reaching out! I will be in touch soon.',
+    });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { error: error, status: 500 };
+  }
+};
 
 export const server = {
   contact: defineAction({
@@ -91,6 +96,20 @@ export const server = {
     }),
     handler: async (input) => {
       return await handleContactForm(input);
+    },
+  }),
+  project: defineAction({
+    input: z.object({
+      name: z.string(),
+      email: z.string().email({ message: 'Invalid email address' }),
+      company: z.string(),
+      budget: z.string(),
+      timeline: z.string(),
+      type: z.string(),
+      description: z.string(),
+    }),
+    handler: async (input) => {
+      return await handleProjectForm(input);
     },
   }),
 };
