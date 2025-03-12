@@ -1,0 +1,28 @@
+---
+
+const { color, label } = Astro.props as { color: 'red' | 'green' | 'orange'; label: string };
+
+// const badgeClass = `inline-flex items-center gap-x-1.5 rounded-md bg-${color}-100 px-3 py-2 text-xs font-medium text-${color}-700`;
+
+const badgeClasses = {
+    red: "bg-red-100 text-red-700 hover:bg-red-200",
+    green: "bg-green-100 text-green-700 hover:bg-green-200",
+    orange: "bg-orange-100 text-orange-700 hover:bg-orange-200",
+}
+
+const svgClasses = {
+    red: "fill-red-500",
+    green: "fill-green-500",
+    orange: "fill-orange-500",
+}
+
+const svgClass = `size-1.5 ${svgClasses[color]} animate-pulse`;
+const badgeClass = `inline-flex items-center gap-x-1.5 rounded-md ${badgeClasses[color]} px-2 py-1 text-xs font-medium`;
+---
+
+<span class={badgeClass}>
+  <svg class={svgClass} viewBox="0 0 6 6" aria-hidden="true">
+    <circle cx="3" cy="3" r="3" />
+  </svg>
+    {label}
+</span>

@@ -1,0 +1,16 @@
+---
+const { title } = Astro.props;
+---
+
+
+
+
+<div class="flex flex-col">
+    <dt class="flex gap-x-2 items-center text-base font-semibold text-gray-900">
+        <slot name="icon" />
+    {title}
+    </dt>
+    <dd class="mt-2 flex flex-auto flex-col text-sm/7 text-gray-600">
+    <slot />
+    </dd>
+</div>
