@@ -1,15 +1,15 @@
-import { k as ROUTE_TYPE_HEADER, l as REROUTE_DIRECTIVE_HEADER, D as DEFAULT_404_COMPONENT, A as AstroError, n as ActionNotFoundError, o as clientAddressSymbol, L as LocalsNotAnObject, p as REROUTABLE_STATUS_CODES, q as responseSentSymbol } from './astro/server_DjLlDlln.mjs';
+import { k as ROUTE_TYPE_HEADER, l as REROUTE_DIRECTIVE_HEADER, D as DEFAULT_404_COMPONENT, A as AstroError, n as ActionNotFoundError, o as clientAddressSymbol, L as LocalsNotAnObject, p as REROUTABLE_STATUS_CODES, q as responseSentSymbol } from './astro/server_Du4t2wnU.mjs';
 import { bold, red, yellow, dim, blue } from 'kleur/colors';
 import 'clsx';
 import 'cookie';
-import { D as DEFAULT_404_ROUTE, e as default404Instance, f as ensure404Route } from './astro-designed-error-pages_D9u9nF4a.mjs';
+import { D as DEFAULT_404_ROUTE, e as default404Instance, f as ensure404Route } from './astro-designed-error-pages_SVSLj7yN.mjs';
 import 'es-module-lexer';
 import buffer from 'node:buffer';
 import crypto$1 from 'node:crypto';
 import { Http2ServerResponse } from 'node:http2';
 import { f as fileExtension, j as joinPaths, s as slash, p as prependForwardSlash, r as removeTrailingForwardSlash, a as appendForwardSlash, c as collapseDuplicateTrailingSlashes, h as hasFileExtension } from './path_BuZodYwm.mjs';
-import { r as requestIs404Or500, i as isRequestServerIsland, n as notFound, a as redirectToFallback, b as redirectToDefaultLocale, c as requestHasLocale, e as normalizeTheLocale, f as defineMiddleware, S as SERVER_ISLAND_COMPONENT, h as SERVER_ISLAND_ROUTE, j as createEndpoint, R as RouteCache, s as sequence, k as findRouteToRewrite, m as matchRoute, l as RenderContext, P as PERSIST_SYMBOL, o as getSetCookiesFromResponse } from './server_Bu-kFd3B.mjs';
-import { N as NOOP_MIDDLEWARE_FN } from './noop-middleware_6zByac-m.mjs';
+import { r as requestIs404Or500, i as isRequestServerIsland, n as notFound, a as redirectToFallback, b as redirectToDefaultLocale, c as requestHasLocale, e as normalizeTheLocale, f as defineMiddleware, S as SERVER_ISLAND_COMPONENT, h as SERVER_ISLAND_ROUTE, j as createEndpoint, R as RouteCache, s as sequence, k as findRouteToRewrite, m as matchRoute, l as RenderContext, P as PERSIST_SYMBOL, o as getSetCookiesFromResponse } from './server_DeE6m6FT.mjs';
+import { N as NOOP_MIDDLEWARE_FN } from './noop-middleware_CeXthnxJ.mjs';
 import '@vercel/routing-utils';
 import nodePath from 'node:path';
 

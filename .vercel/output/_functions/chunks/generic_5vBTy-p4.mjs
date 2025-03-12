@@ -1,5 +1,5 @@
 import { j as joinPaths, i as isRemotePath } from './path_BuZodYwm.mjs';
-import { A as AstroError, a5 as ExpectedImage, a6 as LocalImageUsedWrongly, a7 as MissingImageDimension, a8 as UnsupportedImageFormat, a9 as IncompatibleDescriptorOptions, aa as UnsupportedImageConversion, ab as toStyleString, ac as NoImageMetadata, ad as FailedToFetchRemoteImageDimensions, ae as ExpectedImageOptions, af as ExpectedNotESMImage, ag as InvalidImageService, c as createComponent, e as createAstro, ah as ImageMissingAlt, m as maybeRenderHead, f as addAttribute, ai as spreadAttributes, r as renderTemplate } from './astro/server_DjLlDlln.mjs';
+import { A as AstroError, a4 as ExpectedImage, a5 as LocalImageUsedWrongly, a6 as MissingImageDimension, a7 as UnsupportedImageFormat, a8 as IncompatibleDescriptorOptions, a9 as UnsupportedImageConversion, aa as toStyleString, ab as NoImageMetadata, ac as FailedToFetchRemoteImageDimensions, ad as ExpectedImageOptions, ae as ExpectedNotESMImage, af as InvalidImageService, c as createComponent, e as createAstro, ag as ImageMissingAlt, m as maybeRenderHead, f as addAttribute, ah as spreadAttributes, r as renderTemplate } from './astro/server_Du4t2wnU.mjs';
 import 'clsx';
 import * as mime from 'mrmime';
 import '../renderers.mjs';
@@ -193,15 +193,9 @@ function isLocalService(service) {
   }
   return "transform" in service;
 }
-function parseQuality(quality) {
-  let result = parseInt(quality);
-  if (Number.isNaN(result)) {
-    return quality;
-  }
-  return result;
-}
 const sortNumeric = (a, b) => a - b;
 const baseService = {
+  propertiesToHash: DEFAULT_HASH_PROPS,
   validateOptions(options) {
     if (!options.src || !isRemoteImage(options.src) && !isESMImportedImage(options.src)) {
       throw new AstroError({
@@ -1256,7 +1250,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      './sharp_Bxn1pgGm.mjs'
+      './build-service_D42JryCe.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -1503,7 +1497,7 @@ const $$Picture = createComponent(async ($$result, $$props, $$slots) => {
   })}  <img${addAttribute(fallbackImage.src, "src")}${spreadAttributes(attributes)}${addAttribute(className, "class")}> </picture>`;
 }, "/Users/kyle/Documents/Development/krny-portfolio/node_modules/astro/components/Picture.astro", void 0);
 
-const imageConfig = {"endpoint":{"route":"/_image"},"service":{"entrypoint":"astro/assets/services/sharp","config":{}},"domains":[],"remotePatterns":[],"experimentalResponsiveImages":false};
+const imageConfig = {"endpoint":{"route":"/_image"},"service":{"entrypoint":"@astrojs/vercel/build-image-service","config":{"sizes":[640,750,828,1080,1200,1920,2048,3840],"domains":[],"remotePatterns":[]}},"domains":[],"remotePatterns":[],"experimentalResponsiveImages":false};
 					const getImage = async (options) => await getImage$1(options, imageConfig);
 
 const fnv1a52 = (str) => {
@@ -1593,4 +1587,4 @@ const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 
 const page = () => _page;
 
-export { page as a, baseService as b, parseQuality as p };
+export { baseService as b, page as p };
