@@ -42,8 +42,8 @@ const handleContactForm = async (formData: FormData) => {
 };
 
 export type ProjectFormData = {
-  name: string;
-  email: string;
+  customerName: string;
+  customerEmail: string;
   company: string;
   budget: string;
   timeline: string;
@@ -51,10 +51,13 @@ export type ProjectFormData = {
   description: string;
 };
 
-const handleProjectForm = async (formData: ProjectFormData) => {
+const handleProjectForm = async (formData: Partial<ProjectFormData>) => {
   try {
-    const { name, email, company, budget, timeline, type, description } =
+    const { customerName, customerEmail, company, budget, timeline, type, description } =
       formData;
+
+    const email = customerEmail;
+    const name = customerName;
 
     await resend.emails.send({
       from: 'kylekrny.com <no-reply@kylekrny.com>',
@@ -64,7 +67,7 @@ const handleProjectForm = async (formData: ProjectFormData) => {
       text: `
                 New Project Inquiry from ${name} \n
                 Email: ${email} \n
-                Company: ${company} \n
+                Company: ${company || 'n/a'} \n
                 Budget: ${budget} \n
                 Timeline: ${timeline} \n
                 Type: ${type} \n
@@ -100,9 +103,9 @@ export const server = {
   }),
   project: defineAction({
     input: z.object({
-      name: z.string(),
-      email: z.string().email({ message: 'Invalid email address' }),
-      company: z.string(),
+      customerName: z.string(),
+      customerEmail: z.string().email({ message: 'Invalid email address' }),
+      company: z.string().optional(),
       budget: z.string(),
       timeline: z.string(),
       type: z.string(),
