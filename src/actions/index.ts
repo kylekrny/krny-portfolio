@@ -11,28 +11,73 @@ type FormData = {
   message: string;
 };
 
+type EmailObject = {
+  from?: string;
+  to?: string;
+  subject: string;
+  html?: string;
+  text?: string;
+  replyTo?: string;
+};
+
+const handleEmail = async ({
+  from = 'kylekrny.com <no-reply@kylekrny.com>',
+  to = 'kyle@kylekrny.com',
+  subject,
+  html,
+  text = 'This email is best viewed in a modern email client.',
+  replyTo = 'kyle@kylekrny.com',
+}: EmailObject) => {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: from,
+      to: to,
+      replyTo: replyTo,
+      subject: subject,
+      ...(html && { html: html }),
+      text: text,
+    });
+
+    if (error) {
+      console.error('Email sending error:', error);
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error('handleEmail Failed:', error);
+    throw error;
+  }
+};
+
 const handleContactForm = async (formData: FormData) => {
   try {
     const { name, email, message } = formData;
 
-    await resend.emails.send({
-      from: 'no-reply@kylekrny.com',
+    const submission = {
       replyTo: email,
-      to: 'kyle@kylekrny.com',
       subject: 'New Contact Form Submission',
-      html: `<h3>New Message from ${name}</h3><p>${message}</p><p>Email: ${email}</p>`,
+      text: `New Message from ${name} \n\n${message}`,
+    };
+
+    const confirmation = {
+      to: email,
+      subject: 'Thanks for Reaching Out!',
+      html: generateContactEmailHTML(name, message),
+    };
+
+    const emails = [submission, confirmation];
+
+    const results = await Promise.allSettled(emails.map(handleEmail));
+
+    results.forEach((result) => {
+      if (result.status === 'rejected') {
+        throw new ActionError({
+          message: result.reason.message,
+          code: 'BAD_REQUEST',
+        });
+      }
     });
-
-    const emailHtml = generateContactEmailHTML(name, message);
-
-    await resend.emails.send({
-      from: 'kylekrny.com <no-reply@kylekrny.com>',
-      to: email as string,
-      subject: 'Thanks for Reaching out!',
-      html: emailHtml,
-    });
-
-    return { success: true };
+    return results;
   } catch (error) {
     console.error('Error sending email:', error);
     return new Response(JSON.stringify({ error: 'Internal server error.' }), {
@@ -53,17 +98,22 @@ export type ProjectFormData = {
 
 const handleProjectForm = async (formData: Partial<ProjectFormData>) => {
   try {
-    const { customerName, customerEmail, company, budget, timeline, type, description } =
-      formData;
+    const {
+      customerName,
+      customerEmail,
+      company,
+      budget,
+      timeline,
+      type,
+      description,
+    } = formData;
 
     const email = customerEmail;
     const name = customerName;
 
-    await resend.emails.send({
-      from: 'kylekrny.com <no-reply@kylekrny.com>',
+    const submission = {
       replyTo: email,
-      to: 'kyle@kylekrny.com',
-      subject: 'New Contact Form Submission',
+      subject: 'New Project Inquiry',
       text: `
                 New Project Inquiry from ${name} \n
                 Email: ${email} \n
@@ -73,20 +123,34 @@ const handleProjectForm = async (formData: Partial<ProjectFormData>) => {
                 Type: ${type} \n
                 Description: ${description}
             `,
-    });
+    };
 
-    const emailHtml = generateProjectEmailHTML(formData);
-
-    await resend.emails.send({
-      from: 'kylekrny.com <no-reply@kylekrny.com>',
-      to: email as string,
+    const confirmation = {
+      to: email,
       subject: 'Thank you for your Project Inquiry!',
-      html: emailHtml,
+      html: generateProjectEmailHTML(formData),
       text: 'Thanks for reaching out! I will be in touch soon.',
+    };
+
+    const emails = [submission, confirmation];
+
+    const results = await Promise.allSettled(emails.map(handleEmail));
+
+    results.forEach((result) => {
+      if (result.status === 'rejected') {
+        throw new ActionError({
+          message: result.reason.message,
+          code: 'BAD_REQUEST',
+        });
+      }
     });
+    return results;
   } catch (error) {
     console.error('Error sending email:', error);
-    return { error: error, status: 500 };
+    throw new ActionError({
+      message: 'Internal server error.',
+      code: 'INTERNAL_SERVER_ERROR',
+    });
   }
 };
 
