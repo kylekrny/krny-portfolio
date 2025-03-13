@@ -1,28 +1,29 @@
-
-
 <div class="relative isolate mt-14 pb-8">
   <div class="mx-auto max-w-xl lg:max-w-4xl">
     <h2 class="text-lg font-semibold tracking-tight text-pretty text-gray-900 sm:text-2xl">Let’s talk about your project</h2>
     <p class="mt-2 text-base/8 md:w-3/4">Let’s build something great together—whether you need an MVP, frontend support, or a code audit, I’m here to help.</p>
     <div class="mt-6 flex flex-col gap-16 sm:gap-y-20 lg:flex-row">
-      <form id="contact-form"  method="POST" class="lg:flex-auto">
+      <form id="contact-form" method="POST" class="lg:flex-auto">
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
-            <label for="name" class="block text-sm/6 font-semibold text-gray-900">Name</label>
+            <label for="name" class="block text-sm/6 font-semibold text-gray-900">Name  <span class="hidden pr-3 text-xs text-red-600" id="name-error"></span></label>
             <div class="mt-2">
-              <input type="text" name="name" id="name" autocomplete="given-name" class="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700">
+              <input type="text" name="name" id="name" required autocomplete="given-name" class="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700">
+              
             </div>
           </div>
           <div>
-            <label for="email" class="block text-sm/6 font-semibold text-gray-900">Email</label>
+            <label for="email" class="block text-sm/6 font-semibold text-gray-900">Email <span class="hidden pr-3 text-xs text-red-600" id="email-error"></span></label>
             <div class="mt-2">
-              <input type="text" name="email" id="email" autocomplete="family-name" class="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700">
+              <input type="text" name="email" required id="email" autocomplete="family-name" class="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700">
+              <p class="hidden mt-2 text-sm text-red-600" id="email-error"></p>
             </div>
           </div>
           <div class="sm:col-span-2">
-            <label for="message" class="block text-sm/6 font-semibold text-gray-900">Message</label>
+            <label for="message" class="block text-sm/6 font-semibold text-gray-900">Message<span class="hidden pr-3 text-xs text-red-600" id="message-error"></span></label>
             <div class="mt-2">
-              <textarea id="message" name="message" rows="4" class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700"></textarea>
+              <p class="hidden mt-2 text-sm text-red-600" id="message-error"></p>
+              <textarea id="message" required name="message" rows="4" class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-700"></textarea>
             </div>
           </div>
         </div>
@@ -47,7 +48,7 @@
   </div>
 </div>
 <script>
-  import { actions } from 'astro:actions'
+  import { actions, isInputError } from 'astro:actions'
   
   const handleFormSubmit = async (event: Event) => {
     event.preventDefault()
@@ -56,12 +57,29 @@
     const formData = new FormData(form)
     const formObject: { message: string; email: string; name: string } = Object.fromEntries(formData.entries()) as { message: string; email: string; name: string }
     const response = await actions.contact(formObject)
-    if (!response.error) {
-      form.reset()
-      alert('Thanks for reaching out! I’ll get back to you soon.')
-    } else {
-      alert('There was an error submitting the form. Please try again.')
+    const { error } = response
+    
+    if (isInputError(error)) {
+      Object.entries(error.fields).forEach(([key, value]) => {
+        const field = form.querySelector(`[name="${key}"]`)
+        if (field) {
+          field.classList.add('border-red-500', 'outline-red-500', 'focus:outline-red-700', 'autofocus')
+        }
+        const errorElement = document.getElementById(`${key}-error`)
+        if (errorElement) {
+          errorElement.textContent = value.join(', ')
+
+          errorElement.classList.remove('hidden')
+        }
+      })
     }
+
+    // if (!response.error) {
+    //   form.reset()
+    //   alert('Thanks for reaching out! I’ll get back to you soon.')
+    // } else {
+    //   alert('There was an error submitting the form. Please try again.')
+    // }
   }
   const form = document.getElementById('contact-form')
   if (form) {
