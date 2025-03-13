@@ -49,7 +49,7 @@ export const generateContactEmailHTML = (name: string, message: string) => `
 </body>
 </html>`;
 
-export const generateProjectEmailHTML = (formData: ProjectFormData) => `
+export const generateProjectEmailHTML = (formData: Partial<ProjectFormData>) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,13 +87,13 @@ export const generateProjectEmailHTML = (formData: ProjectFormData) => `
 </head>
 <body>
   <div class="container">
-    <h2>Thanks for reaching out, ${formData.name}</h2>
+    <h2>Thanks for reaching out, ${formData.customerName}</h2>
     <p>I've received your project inquiry and will get back to you soon.</p>
     <p><strong>Your Project Details:</strong></p>
     <div class="message-box">
-      <p><strong>Name:</strong> ${formData.name}</p>
-      <p><strong>Email:</strong> ${formData.email}</p>
-      <p><strong>Company:</strong> ${formData.company}</p>
+      <p><strong>Name:</strong> ${formData.customerName}</p>
+      <p><strong>Email:</strong> ${formData.customerEmail}</p>
+      <p><strong>Company:</strong> ${formData.company || 'n/a'}</p>
       <p><strong>Budget:</strong> ${formData.budget}</p>
       <p><strong>Timeline:</strong> ${formData.timeline}</p>
       <p><strong>Type:</strong> ${formData.type}</p>

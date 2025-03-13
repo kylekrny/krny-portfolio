@@ -41,7 +41,29 @@ const { id, title } = Astro.props;
 </div>
 
 <script>
-  import { actions } from 'astro:actions'
+  import { actions, isInputError, isActionError } from 'astro:actions'
+      function closeModal(modal: HTMLElement) {
+      if (!modal) return;
+
+      // Animate out
+      const fixedElement = modal.querySelector(".fixed");
+      if (fixedElement) {
+        fixedElement.classList.remove("opacity-100");
+        fixedElement.classList.add("opacity-0");
+      }
+      const relativeElement = modal.querySelector(".relative");
+      if (relativeElement) {
+        relativeElement.classList.remove("opacity-100", "translate-y-0", "sm:scale-100");
+        relativeElement.classList.add("opacity-0", "translate-y-4", "sm:translate-y-0", "sm:scale-95");
+      }
+
+      // Wait for animation to finish before hiding
+      setTimeout(() => {
+        modal.classList.add("hidden");
+      }, 200); // Match animation duration
+    }
+  
+  
   document.addEventListener("DOMContentLoaded", () => {
     function openModal(modal: HTMLElement) {
       if (!modal) return;
@@ -64,30 +86,7 @@ const { id, title } = Astro.props;
       modal.addEventListener("click", outsideClickClose);
     }
 
-    function closeModal(modal: HTMLElement) {
-      if (!modal) return;
 
-      // Animate out
-      const fixedElement = modal.querySelector(".fixed");
-      if (fixedElement) {
-        fixedElement.classList.remove("opacity-100");
-        fixedElement.classList.add("opacity-0");
-      }
-      const relativeElement = modal.querySelector(".relative");
-      if (relativeElement) {
-        relativeElement.classList.remove("opacity-100", "translate-y-0", "sm:scale-100");
-        relativeElement.classList.add("opacity-0", "translate-y-4", "sm:translate-y-0", "sm:scale-95");
-      }
-
-      // Wait for animation to finish before hiding
-      setTimeout(() => {
-        modal.classList.add("hidden");
-      }, 200); // Match animation duration
-
-      // Remove event listeners
-      document.removeEventListener("keydown", escClose);
-      modal.removeEventListener("click", outsideClickClose);
-    }
 
     function escClose(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -135,8 +134,8 @@ const { id, title } = Astro.props;
       
     
       type FormObject = {
-        name: string;
-        email: string;
+        customerName: string;
+        customerEmail: string;
         company: string;
         type: string;
         budget: string;
@@ -146,18 +145,62 @@ const { id, title } = Astro.props;
     
       const handleFormSubmit = async (event: Event) => {
         event.preventDefault()
+        const button = document.getElementById('pf-button')
+        const standard = document.getElementById('pf-button-standard')
+        const loading = document.getElementById('pf-button-loading')
+        const buttonError = document.getElementById('pf-button-error')
+        const success = document.getElementById('pf-button-success')
         const form = event.target as HTMLFormElement
-        if (!form) return;
+        if (!form || !button || !standard || !loading || !buttonError || !success) return;
+          
+        (button as HTMLButtonElement).disabled = true
+        standard.classList.add('hidden')
+        loading.classList.remove('hidden')
+  
         const formData = new FormData(form)
         const formObject: FormObject = Object.fromEntries(formData.entries()) as FormObject
-        console.log(formObject)
-        const response = await actions.project(formObject)
-        console.log(response)
-        if (!response.error) {
+
+        const { error } = await actions.project(formObject)
+
+        if (isInputError(error)) {
+          Object.entries(error.fields).forEach(([key, value]) => {
+            const field = form.querySelector(`[name="${key}"]`)
+            if (field) {
+              field.classList.add('border-red-500', 'outline-red-500', 'focus:outline-red-700', 'autofocus')
+            }
+            const errorElement = document.getElementById(`${key}-error`)
+            if (errorElement) {
+              errorElement.textContent = value.join(', ')
+              errorElement.classList.remove('hidden')
+            }
+          })
+        }
+        if (!error && !isInputError(error)) {
+            (button as HTMLButtonElement).disabled = false
+            loading.classList.add('hidden')
+            success.classList.remove('hidden')
+            button.classList.add('bg-green-500', 'hover:bg-green-600')
+
+            setTimeout(() => {
+              const modal = document.getElementById('project-modal')
+              if (modal) {
+                closeModal(modal)
+              }
+              success.classList.add('hidden')
+              standard.classList.remove('hidden')
+              button.classList.remove('bg-green-500', 'hover:bg-green-600')
+            }, 1000)
           form.reset()
-          alert('Thanks for reaching out! I’ll get back to you soon.')
         } else {
-          alert('There was an error submitting the form. Please try again.')
+            loading.classList.add('hidden')
+            buttonError.classList.remove('hidden')
+            button.classList.add('bg-red-500', 'hover:bg-red-600')
+
+            setTimeout(() => {
+              buttonError.classList.add('hidden')
+              standard.classList.remove('hidden')
+              button.classList.remove('bg-red-500', 'hover:bg-red-600')
+            }, 3000)
         }
       }
       const form = document.getElementById('project-form')
